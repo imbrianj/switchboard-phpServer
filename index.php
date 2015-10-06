@@ -56,7 +56,7 @@
 class location {
   // You'll need to edit this to include the credentialed users.
   protected $users    = array('user' => 'password');
-  protected $locCount = 10;
+  protected $locCount = 25;
   protected $user;
   protected $location;
 
@@ -91,7 +91,7 @@ class location {
     }
 
     // Check that we have credentials and that they match.
-    $credentialed = (($user && $pass) && ($this->users[$user] === $pass));
+    $credentialed = (($user && $pass) && ($this->users[$user]) && ($this->users[$user] === $pass));
     // Distinguish between someone writing a location and one polling for one.
     $hasLocation  = ($latitude && $longitude);
 
@@ -101,6 +101,7 @@ class location {
     $this->location = array('lat'   => $latitude,
                             'long'  => $longitude,
                             'alt'   => $altitude,
+                            'link'  => 'https://maps.google.com/?q=' . $latitude . ',' . $longitude,
                             'speed' => $speed,
                             'user'  => $user,
                             'time'  => time());
