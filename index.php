@@ -55,8 +55,8 @@
 
 class location {
   // You'll need to edit this to include the credentialed users.
-  protected $users    = array('user' => 'password');
-  protected $locCount = 25;
+  protected $users = array('user' => 'password');
+  protected $locCount;
   protected $user;
   protected $location;
 
@@ -64,6 +64,7 @@ class location {
     $output    = '';
     $user      = '';
     $pass      = '';
+    $locCount  = 10;
     $latitude  = '';
     $longitude = '';
     $altitude  = '';
@@ -88,6 +89,10 @@ class location {
       if(array_key_exists('speed', $_POST)) {
         $speed     = filter_var($_POST['speed'],    FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION); // 0.04444444
       }
+
+      if(array_key_exists('count', $_POST)) {
+        $locCount  = filter_var($_POST['count'],    FILTER_SANITIZE_NUMBER_INT);
+      }
     }
 
     // Check that we have credentials and that they match.
@@ -95,8 +100,9 @@ class location {
     // Distinguish between someone writing a location and one polling for one.
     $hasLocation  = ($latitude && $longitude);
 
-    $this->user = $user;
-    $this->pass = $pass;
+    $this->user     = $user;
+    $this->pass     = $pass;
+    $this->locCount = $locCount;
 
     $this->location = array('lat'   => $latitude,
                             'long'  => $longitude,
@@ -145,7 +151,11 @@ class location {
     $value    = '[]'; // JSON encoded array
 
     if(file_exists($filename)) {
-      $value = file_get_contents($filename);
+      $rawValue = file_get_contents($filename);
+
+      $value = array_slice(json_decode($rawValue), 0, $this->locCount);
+
+      $value = json_encode($value);
     }
 
     return $value;
