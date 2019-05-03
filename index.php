@@ -106,7 +106,7 @@ class location {
 
     $this->location = array('lat'   => $latitude,
                             'long'  => $longitude,
-                            'alt'   => $altitude,
+                            'alt'   => number_format($altitude, 2),
                             'link'  => 'https://maps.google.com/?q=' . $latitude . ',' . $longitude,
                             'speed' => $speed,
                             'user'  => $user,
